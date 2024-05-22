@@ -33,7 +33,10 @@ fn main() {
     println!("Select a process to inject into: ");
     selection.clear();
     std::io::stdin().read_line(&mut selection).unwrap();
-    let selection = selection.trim().parse::<u32>().unwrap();
+    let selection = selection
+        .trim()
+        .parse::<u32>()
+        .unwrap_or((procs.len() + 1).try_into().unwrap());
     if selection > procs.len() as u32 {
         println!("Invalid selection");
         return;
@@ -55,7 +58,7 @@ fn main() {
         .join("target")
         .join("release")
         .join(format!("libinjector.{}", ext));
-    println!("Injecting: {:?}", dll_path);
+    println!("Injecting: {:?}", dll_path.display());
     inject(
         inject_process.clone(),
         dll_path.to_str().unwrap().to_string(),
